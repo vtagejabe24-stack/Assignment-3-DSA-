@@ -1,0 +1,99 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define SIZE 100
+
+class Stack {
+    char arr[SIZE];
+    int top;
+public:
+    Stack() {
+        top = -1;
+    }
+
+    void push(char c) {
+        if (top < SIZE - 1) {
+            arr[++top] = c;
+        }
+    }
+
+    char pop() {
+        if (top >= 0) {
+            return arr[top--];
+        }
+        return '\0';
+    }
+
+    char peek() {
+        if (top >= 0) return arr[top];
+        return '\0';
+    }
+
+    bool isEmpty() {
+        return (top == -1);
+    }
+};
+
+// function to check precedence
+int prec(char c) {
+    if (c == '^')
+        return 3;
+    else if (c == '*' || c == '/')
+        return 2;
+    else if (c == '+' || c == '-')
+        return 1;
+    else
+        return -1;
+}
+
+// convert infix to postfix
+string infixToPostfix(string infix) {
+    Stack s;
+    string postfix = "";
+
+    for (int i = 0; i < infix.length(); i++) {
+        char c = infix[i];
+
+        // if operand, add to postfix
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+            postfix += c;
+        }
+        // if (, push
+        else if (c == '(') {
+            s.push(c);
+        }
+        // if ), pop until (
+        else if (c == ')') {
+            while (!s.isEmpty() && s.peek() != '(') {
+                postfix += s.pop();
+            }
+            s.pop(); // remove '('
+        }
+        // operator
+        else {
+            while (!s.isEmpty() && prec(s.peek()) >= prec(c)) {
+                postfix += s.pop();
+            }
+            s.push(c);
+        }
+    }
+
+    // pop remaining operators
+    while (!s.isEmpty()) {
+        postfix += s.pop();
+    }
+
+    return postfix;
+}
+
+int main() {
+    string infix;
+    cout << "Enter infix expression: ";
+    cin >> infix;
+
+    string postfix = infixToPostfix(infix);
+    cout << "Postfix expression: " << postfix << endl;
+
+    return 0;
+}
