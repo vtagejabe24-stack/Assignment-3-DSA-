@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define SIZE 100   // 100 is the max size of stack
+
+class Stack {
+    char arr[SIZE];
+    int top;
+public:
+    Stack() {
+        top = -1;
+    }
+
+    void push(char c) {
+        if (top == SIZE - 1) {
+            cout << "Stack overflow\n";
+        } else {
+            arr[++top] = c;
+        }
+    }
+
+    char pop() {
+        if (top == -1) {
+            cout << "Stack underflow\n";
+            return '\0';
+        } else {
+            return arr[top--];
+        }
+    }
+
+    bool isEmpty() {
+        return (top == -1);
+    }
+};
+
+int main() {
+    string str;
+    cout << "Enter a string: ";
+    cin >> str;
+
+    Stack s;
+
+    // push all characters
+    for (int i = 0; i < str.length(); i++) {
+        s.push(str[i]);
+    }
+
+    // pop and form reversed string
+    string rev = "";
+    while (!s.isEmpty()) {
+        rev += s.pop();
+    }
+
+    cout << "Reversed string: " << rev << endl;
+
+    return 0;
+}
