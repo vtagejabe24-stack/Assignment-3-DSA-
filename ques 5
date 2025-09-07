@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#define SIZE 100
+
+class Stack {
+    int arr[SIZE];
+    int top;
+public:
+    Stack() {
+        top = -1;
+    }
+
+    void push(int x) {
+        if (top < SIZE - 1) {
+            arr[++top] = x;
+        }
+    }
+
+    int pop() {
+        if (top >= 0) {
+            return arr[top--];
+        }
+        return -1; // just in case
+    }
+
+    bool isEmpty() {
+        return (top == -1);
+    }
+};
+
+// function to evaluate postfix expression
+int evaluatePostfix(string exp) {
+    Stack s;
+
+    for (int i = 0; i < exp.length(); i++) {
+        char c = exp[i];
+
+        // if operand (digit), push
+        if (c >= '0' && c <= '9') {
+            s.push(c - '0');  // convert char to int
+        }
+        // if operator, pop 2 and apply
+        else {
+            int val2 = s.pop();
+            int val1 = s.pop();
+
+            switch (c) {
+                case '+': s.push(val1 + val2); break;
+                case '-': s.push(val1 - val2); break;
+                case '*': s.push(val1 * val2); break;
+                case '/': s.push(val1 / val2); break;
+            }
+        }
+    }
+    return s.pop(); // final answer
+}
+
+int main() {
+    string exp;
+    cout << "Enter postfix expression (single-digit operands): ";
+    cin >> exp;
+
+    int result = evaluatePostfix(exp);
+    cout << "Result = " << result << endl;
+
+    return 0;
+}
